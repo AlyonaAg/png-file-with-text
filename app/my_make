@@ -1,0 +1,22 @@
+STATIC_LIB_PATH=-L../freetype/MyLibs -L../libpng/MyLibs -L../zlib/MyLibs
+STATIC_LIB=../freetype/MyLibs/libfreetype.a ../libpng/MyLibs/libpng.a ../zlib/MyLibs/libz.a
+INCLUDES=-I../freetype/include -I../libpng
+DYNAMIC_LIB=../freetype/MyLibs/libfreetype.so ../libpng/MyLibs/libpng.so
+SRC_ELF=../elfloader/elf_loader.c ../elfloader/main.c ../elfloader/wheelc/list.c
+
+static: my_app.c $(STATIC_LIB)
+	gcc $(INCLUDES) $(STATIC_LIB_PATH) my_app.c -lfreetype -lpng -lz -lm -o ../app-static
+
+dynamic: my_app.c $(DYNAMIC_LIB)
+	cp -f ../freetype/MyLibs/libfreetype.so ../libfreetype.so
+	cp -f ../libpng/MyLibs/libpng.so ../libpng.so
+	gcc $(INCLUDES) -DDYNAMIC my_app.c -lm -ldl -o ../app-dynamic
+
+blob: my_app.c $(SRC_ELF) $(STATIC_LIB)
+	gcc $(SRC_ELF) -lm -ldl -o ../app-blob
+	gcc $(INCLUDES) $(STATIC_LIB_PATH) -nostdlib -pie -fPIE -fPIC -shared -DBLOB my_app.c -lfreetype -lpng -lz -lm -o ../blob.bin
+
+clean:
+	rm -f -d ../app-*
+	rm -f -d ../blob.bin
+	rm -f -d ../*.so

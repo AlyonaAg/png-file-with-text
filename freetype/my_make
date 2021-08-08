@@ -1,0 +1,16 @@
+OBJECT_FILES=objs/ftsystem.o objs/ftbase.o objs/ftinit.o objs/autofit.o objs/ftbitmap.o objs/ftglyph.o objs/truetype.o objs/type1.o objs/cff.o objs/type1cid.o objs/pfr.o objs/type42.o objs/winfnt.o objs/ftgzip.o objs/ftlzw.o objs/pcf.o objs/psaux.o objs/psnames.o objs/pshinter.o objs/raster.o objs/sfnt.o objs/bdf.o objs/ftdebug.o objs/smooth.o
+INCLUDES=-I./include/freetype/config -I./builds/unix -I./include 
+
+all: clean static dynamic blob
+
+static: $(OBJECT_FILES)
+	ar cr MyLibs/libfreetype.a $(OBJECT_FILES)
+
+dynamic: $(OBJECT_FILES)
+	gcc -shared $(OBJECT_FILES) -o MyLibs/libfreetype.so
+
+blob: static
+
+clean:
+	rm -f -d -r MyLibs/
+	mkdir -p MyLibs

@@ -1,0 +1,14 @@
+OBJ=objs/adler32.o objs/crc32.o objs/deflate.o objs/infback.o objs/inffast.o objs/inflate.o objs/inftrees.o objs/trees.o objs/zutil.o objs/compress.o objs/uncompr.o
+
+all: clean static dynamic blob
+
+MyLibs/libz.a: $(OBJ)
+	ar rc MyLibs/libz.a $(OBJ)
+
+static: MyLibs/libz.a
+
+blob: static
+
+clean:
+	rm -f -d -r MyLibs/
+	mkdir -p MyLibs

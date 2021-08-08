@@ -1,0 +1,18 @@
+OBJ=objs/png.o objs/pngerror.o objs/pngget.o objs/pngmem.o objs/pngpread.o objs/pngread.o objs/pngrio.o objs/pngrtran.o objs/pngrutil.o objs/pngset.o objs/pngtrans.o objs/pngwio.o objs/pngwrite.o objs/pngwtran.o objs/pngwutil.o
+OBJ_ZLIB=../zlib/objs/adler32.o ../zlib/objs/crc32.o ../zlib/objs/deflate.o ../zlib/objs/infback.o ../zlib/objs/inffast.o ../zlib/objs/inflate.o ../zlib/objs/inftrees.o ../zlib/objs/trees.o ../zlib/objs/zutil.o ../zlib/objs/compress.o ../zlib/objs/uncompr.o
+
+
+all: clean static dynamic blob
+
+static: $(OBJ)
+	ar cr MyLibs/libpng.a $(OBJ)
+
+dynamic: $(OBJ_ZLIB) $(OBJ)
+	gcc -shared $(OBJ) $(OBJ_ZLIB) -o MyLibs/libpng.so
+
+blob: static
+
+clean:
+	rm -f -d -r MyLibs/
+	mkdir -p MyLibs
+
